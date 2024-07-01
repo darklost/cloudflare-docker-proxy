@@ -1,3 +1,4 @@
+import HELP from './help.html'
 addEventListener("fetch", (event) => {
   event.passThroughOnException();
   event.respondWith(handleRequest(event.request));
@@ -7,17 +8,17 @@ const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
   // production
-  "docker.libcuda.so": dockerHub,
-  "quay.libcuda.so": "https://quay.io",
-  "gcr.libcuda.so": "https://gcr.io",
-  "k8s-gcr.libcuda.so": "https://k8s.gcr.io",
-  "k8s.libcuda.so": "https://registry.k8s.io",
-  "ghcr.libcuda.so": "https://ghcr.io",
-  "cloudsmith.libcuda.so": "https://docker.cloudsmith.io",
-  "ecr.libcuda.so": "https://public.ecr.aws",
+  "docker.darklost.me": dockerHub,
+  "quay.darklost.me": "https://quay.io",
+  "gcr.darklost.me": "https://gcr.io",
+  "k8s-gcr.darklost.me": "https://k8s.gcr.io",
+  "k8s.darklost.me": "https://registry.k8s.io",
+  "ghcr.darklost.me": "https://ghcr.io",
+  "cloudsmith.darklost.me": "https://docker.cloudsmith.io",
+  "ecr.darklost.me": "https://public.ecr.aws",
 
   // staging
-  "docker-staging.libcuda.so": dockerHub,
+  "docker-staging.darklost.me": dockerHub,
 };
 
 function routeByHosts(host) {
@@ -43,6 +44,17 @@ async function handleRequest(request) {
       }
     );
   }
+
+  //return help
+  if (url.pathname === "/") {
+    return new Response(HELP, {
+      status: 200,
+      headers: {
+        "content-type": "text/html"
+      }
+    });
+  }
+
   const isDockerHub = upstream == dockerHub;
   const authorization = request.headers.get("Authorization");
   if (url.pathname == "/v2/") {
